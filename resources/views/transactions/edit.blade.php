@@ -10,9 +10,59 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
 
-                    <form action="{{ route('transactions.update', $transaction->id) }}" method="POST">
+                    <form action="{{ route('transactions.update', $transaction->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
+
+                        <!-- Account -->
+                        <div class="mb-4">
+                            <label for="account_id" class="block text-sm font-medium text-gray-700">Account</label>
+                            <select name="account_id" id="account_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" required>
+                                <option value="" disabled {{ old('account_id', $transaction->account_id) ? '' : 'selected' }}>Select account</option>
+                                @foreach($accounts as $account)
+                                <option value="{{ $account->id }}" {{ old('account_id', $transaction->account_id) == $account->id ? 'selected' : '' }}>
+                                    {{ $account->name }} ({{ $account->accountType->name }})
+                                </option>
+                                @endforeach
+                            </select>
+                            @error('account_id')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Category -->
+                        <div class="mb-4">
+                            <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
+                            <select name="category_id" id="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" required>
+                                <option value="" disabled {{ old('category_id', $transaction->category_id) ? '' : 'selected' }}>Select category</option>
+                                @foreach($categories as $category)
+                                <option value="{{ $category->id }}"
+                                    data-type="{{ $category->type }}"
+                                    {{ old('category_id', $transaction->category_id) == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }} ({{ ucfirst($category->type) }})
+                                </option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Receipt Upload & Preview -->
+                        <div class="mb-4">
+                            @if($transaction->receipt_path)
+                            <div class="mb-3">
+                                <p class="text-sm text-gray-600 mb-1">Current receipt:</p>
+                                <img src="{{ Storage::url($transaction->receipt_path) }}" class="h-32 rounded border object-cover">
+                            </div>
+                            @endif
+
+                            <label for="receipt" class="block text-sm font-medium text-gray-700">Receipt (optional - upload new to replace)</label>
+                            <input type="file" name="receipt" id="receipt" accept="image/*" class="mt-1 block w-full text-sm">
+                            @error('receipt')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
                         <!-- Transaction Type -->
                         <div class="mb-4">

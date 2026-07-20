@@ -20,17 +20,60 @@
                         {{ __('Transactions') }}
                     </x-nav-link>
 
-                    <!-- Admin Area Link (Visible only to Admin) -->
+                    <!-- Admin Area Dropdown (Visible only to Admin) -->
                     @if(Auth::user()->role === 'admin')
-                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                        {{ __('Admin Area') }}
-                    </x-nav-link>
+                    <div class="hidden sm:flex sm:items-center">
+                        <x-dropdown align="left" width="56">
+                            <x-slot name="trigger">
+                                <button class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 focus:outline-none transition duration-150 ease-in-out {{ request()->routeIs('admin.*') ? 'border-indigo-400 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                                    {{ __('Admin Area') }}
+
+                                    <svg class="ms-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </x-slot>
+
+                            <x-slot name="content">
+                                <x-dropdown-link :href="route('admin.dashboard')" :class="request()->routeIs('admin.dashboard') ? 'bg-gray-100 font-semibold' : ''">
+                                    {{ __('📊 Dashboard & Statistik') }}
+                                </x-dropdown-link>
+
+                                <x-dropdown-link :href="route('admin.users.index')" :class="request()->routeIs('admin.users.*') ? 'bg-gray-100 font-semibold' : ''">
+                                    {{ __('👤 User Management') }}
+                                </x-dropdown-link>
+
+                                <div class="border-t border-gray-100 my-1"></div>
+
+                                <span class="block px-4 pt-1 pb-1 text-xs text-gray-400 uppercase tracking-wider">{{ __('Master Data') }}</span>
+
+                                <x-dropdown-link :href="route('admin.categories.index')" :class="request()->routeIs('admin.categories.*') ? 'bg-gray-100 font-semibold' : ''">
+                                    {{ __('🏷️ Kategori Default') }}
+                                </x-dropdown-link>
+
+                                <x-dropdown-link :href="route('admin.account-types.index')" :class="request()->routeIs('admin.account-types.*') ? 'bg-gray-100 font-semibold' : ''">
+                                    {{ __('💳 Jenis Akun') }}
+                                </x-dropdown-link>
+
+                                <div class="border-t border-gray-100 my-1"></div>
+
+                                <x-dropdown-link :href="route('admin.announcements.index')" :class="request()->routeIs('admin.announcements.*') ? 'bg-gray-100 font-semibold' : ''">
+                                    {{ __('📢 Announcements') }}
+                                </x-dropdown-link>
+                            </x-slot>
+                        </x-dropdown>
+                    </div>
                     @endif
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <!-- Tombol Toggle Dark/Light Mode -->
+                <button onclick="document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');" class="p-2 rounded-md text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 mr-3" title="Toggle dark mode">
+                    🌓
+                </button>
+
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -55,7 +98,7 @@
 
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                            this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
@@ -87,11 +130,43 @@
                 {{ __('Transactions') }}
             </x-responsive-nav-link>
 
+            <x-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')">
+                {{ __('Accounts') }}
+            </x-nav-link>
+
+            <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
+                {{ __('Categories') }}
+            </x-nav-link>
+
+            <x-nav-link :href="route('budgets.index')" :active="request()->routeIs('budgets.*')">
+                {{ __('Budgets') }}
+            </x-nav-link>
+
             <!-- Menu Admin Area untuk Mobile (Hanya untuk Admin) -->
             @if(Auth::user()->role === 'admin')
-            <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                {{ __('Admin Area') }}
-            </x-responsive-nav-link>
+            <div class="pt-2 pb-1 border-t border-gray-200 mt-2">
+                <div class="px-4 text-xs text-gray-400 uppercase tracking-wider mb-1">{{ __('Admin Area') }}</div>
+
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                    {{ __('📊 Dashboard & Statistik') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                    {{ __('👤 User Management') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
+                    {{ __('🏷️ Kategori Default') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('admin.account-types.index')" :active="request()->routeIs('admin.account-types.*')">
+                    {{ __('💳 Jenis Akun') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('admin.announcements.index')" :active="request()->routeIs('admin.announcements.*')">
+                    {{ __('📢 Announcements') }}
+                </x-responsive-nav-link>
+            </div>
             @endif
         </div>
 
@@ -122,3 +197,9 @@
         </div>
     </div>
 </nav>
+
+@foreach($activeAnnouncements ?? [] as $announcement)
+<div class="bg-yellow-100 border-b border-yellow-300 text-yellow-800 px-4 py-2 text-sm text-center">
+    <strong>{{ $announcement->title }}:</strong> {{ $announcement->message }}
+</div>
+@endforeach

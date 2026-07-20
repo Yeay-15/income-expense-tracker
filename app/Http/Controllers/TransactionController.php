@@ -2,102 +2,131 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
+use App\Models\Category;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
+use App\Http\Requests\TransactionRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        // Fetch transactions only for the currently logged-in user
         $transactions = Transaction::where('user_id', Auth::id())
-                        ->orderBy('date', 'desc')
-                        ->paginate(10);
+            ->with(['account', 'category'])
+            ->orderBy('date', 'desc')
+            ->paginate(10);
 
         return view('transactions.index', compact('transactions'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('transactions.create');
+        [$accounts, $categories] = $this->formOptions();
+        return view('transactions.create', compact('accounts', 'categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(TransactionRequest $request)
     {
-        // Data validation
-        $validated = $request->validate([
-            'type' => 'required|in:income,expense',
-            'amount' => 'required|numeric|min:0',
-            'description' => 'required|string|max:255',
-            'date' => 'required|date',
-        ]);
-
-        // Automatically assign the transaction to the authenticated user
+        $validated = $request->validated();
         $validated['user_id'] = Auth::id();
+
+        if ($request->hasFile('receipt')) {
+            $validated['receipt_path'] = $request->file('receipt')->store('receipts', 'public');
+        }
+        unset($validated['receipt']);
 
         Transaction::create($validated);
 
         return redirect()->route('transactions.index')
-                         ->with('success', 'Transaction created successfully.');
+            ->with('success', 'Transaction created successfully.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Transaction $transaction)
     {
-        // Security check: ensure the user owns this transaction
+        if ($transaction->transfer_group_id) {
+            return redirect()->route('transactions.index')
+                ->with('error', 'Transaksi transfer tidak bisa diedit. Hapus dan buat ulang jika perlu koreksi.');
+        }
+
         if ($transaction->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
 
-        return view('transactions.edit', compact('transaction'));
+        [$accounts, $categories] = $this->formOptions();
+        return view('transactions.edit', compact('transaction', 'accounts', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Transaction $transaction)
+    public function update(TransactionRequest $request, Transaction $transaction)
     {
+
+        if ($transaction->transfer_group_id) {
+            return redirect()->route('transactions.index')
+                ->with('error', 'Transaksi transfer tidak bisa diedit. Hapus dan buat ulang jika perlu koreksi.');
+        }
+
         if ($transaction->user_id !== Auth::id()) {
             abort(403);
         }
 
-        $validated = $request->validate([
-            'type' => 'required|in:income,expense',
-            'amount' => 'required|numeric|min:0',
-            'description' => 'required|string|max:255',
-            'date' => 'required|date',
-        ]);
+        $validated = $request->validated();
+
+        if ($request->hasFile('receipt')) {
+            // Hapus struk lama supaya storage tidak menumpuk file yatim
+            if ($transaction->receipt_path) {
+                Storage::disk('public')->delete($transaction->receipt_path);
+            }
+            $validated['receipt_path'] = $request->file('receipt')->store('receipts', 'public');
+        }
+        unset($validated['receipt']);
 
         $transaction->update($validated);
 
         return redirect()->route('transactions.index')
-                         ->with('success', 'Transaction updated successfully.');
+            ->with('success', 'Transaction updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Transaction $transaction)
     {
         if ($transaction->user_id !== Auth::id()) {
             abort(403);
         }
 
+        if ($transaction->transfer_group_id) {
+            // Hapus kedua baris transfer sekaligus supaya saldo tetap konsisten
+            Transaction::where('transfer_group_id', $transaction->transfer_group_id)
+                ->where('user_id', Auth::id())
+                ->get()
+                ->each(function ($t) {
+                    if ($t->receipt_path) {
+                        Storage::disk('public')->delete($t->receipt_path);
+                    }
+                    $t->delete();
+                });
+
+            return redirect()->route('transactions.index')->with('success', 'Transfer berhasil dihapus.');
+        }
+
+        if ($transaction->receipt_path) {
+            Storage::disk('public')->delete($transaction->receipt_path);
+        }
+
         $transaction->delete();
 
-        return redirect()->route('transactions.index')
-                         ->with('success', 'Transaction deleted successfully.');
+        return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully.');
+    }
+
+    /**
+     * Ambil daftar akun & kategori milik user untuk dropdown form.
+     */
+    private function formOptions(): array
+    {
+        $userId = Auth::id();
+
+        $accounts = Account::where('user_id', $userId)->get();
+        $categories = Category::availableFor($userId)->orderBy('type')->orderBy('name')->get();
+
+        return [$accounts, $categories];
     }
 }
