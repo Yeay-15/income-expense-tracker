@@ -147,6 +147,7 @@ Untuk produksi, daftarkan cron job berikut di server:
 
 ### 1. Halaman Awal & Autentikasi
 ![Welcome Page](docs/welcome-page.png)
+![Login](docs/login.png)
 ![Register](docs/register.png)
 ![Verifikasi Email via Mailtrap](docs/verifikasi-email-mailtrap.png)
 
@@ -162,12 +163,22 @@ Untuk produksi, daftarkan cron job berikut di server:
 ![Budgets](docs/budgets.png)
 ![Savings](docs/savings.png)
 
-### 5. Panel Admin
+### 5. Panel Admin & Pemisahan Hak Akses
+
+**Sisi Admin** — memiliki akses ke User Management, Master Data, dan statistik sistem yang tidak tersedia untuk role User:
 ![Admin Dashboard](docs/admin-dashboard.png)
 ![Admin User Management](docs/admin-user-management.png)
 
-### 6. Tampilan Responsif (Mobile)
-![Responsive Mobile](docs/responsive-mobile.png)
+**Sisi User** — ketika akun dengan role **User** mencoba mengakses halaman khusus Admin (`/admin/dashboard`) secara langsung, sistem menolak akses lewat `AdminMiddleware` (403 Forbidden):
+![User Ditolak Akses Admin](docs/user-access-denied.png)
+
+### 6. Tampilan Responsif — Desktop vs Mobile
+
+Antarmuka aplikasi dibangun responsif menggunakan Tailwind CSS, menyesuaikan tata letak baik di layar desktop maupun mobile tanpa kehilangan fungsionalitas.
+
+| Tampilan Desktop | Tampilan Mobile |
+|---|---|
+| ![Tampilan Desktop](docs/main-dashboard.png) | ![Tampilan Mobile](docs/responsive-mobile.png) |
 
 ### 7. Hasil Export PDF
 ![PDF Export](docs/pdf-export.png)
@@ -195,4 +206,4 @@ Ringkasan tabel utama pada aplikasi ini:
 
 ## Lisensi
 
-Proyek ini dibuat untuk keperluan Tugas Akhir (UAS) mata kuliah Pemrograman Web lanjut (A7)
+Proyek ini dibuat untuk keperluan Tugas Akhir (UAS) mata kuliah Pemrograman Web lanjut, Teknik informatika, Universitas Malikussaleh
