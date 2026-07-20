@@ -125,7 +125,12 @@ class TransactionController extends Controller
         $userId = Auth::id();
 
         $accounts = Account::where('user_id', $userId)->get();
-        $categories = Category::availableFor($userId)->orderBy('type')->orderBy('name')->get();
+
+        // Perubahan: Urutkan "Lainnya" agar selalu di bawah, sisanya sesuai abjad
+        $categories = Category::availableFor($userId)
+            ->orderByRaw("CASE WHEN name = 'Lainnya' THEN 1 ELSE 0 END")
+            ->orderBy('name', 'asc')
+            ->get();
 
         return [$accounts, $categories];
     }

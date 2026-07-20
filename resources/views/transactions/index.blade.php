@@ -10,23 +10,26 @@
 
             <!-- Success Message Alert -->
             @if(session('success'))
-            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+            <div class="mb-4 bg-success-50 border border-success-100 text-success-700 px-4 py-3 rounded relative" role="alert">
                 <span class="block sm:inline">{{ session('success') }}</span>
             </div>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+                <div class="p-6 text-slate-900">
 
-                    <div class="flex justify-between items-center mb-6">
+                    <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
                         <h3 class="text-lg font-medium">Transaction History</h3>
-                        <a href="{{ route('transactions.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out">
-                            + Add Transaction
-                        </a>
 
-                        <a href="{{ route('transfers.create') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out mr-2">
-                            ⇄ Transfer
-                        </a>
+                        <div class="flex items-center gap-2">
+                            <a href="{{ route('transfers.create') }}" class="inline-flex items-center px-4 py-2 bg-white border border-slate-300 rounded-md font-semibold text-xs text-slate-700 uppercase tracking-widest shadow-sm hover:bg-slate-50 transition duration-150 ease-in-out">
+                                ⇄ Transfer
+                            </a>
+
+                            <a href="{{ route('transactions.create') }}" class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest shadow-sm hover:bg-primary-700 transition duration-150 ease-in-out">
+                                + Add Transaction
+                            </a>
+                        </div>
                     </div>
 
                     <!-- Responsive Table -->
@@ -56,13 +59,13 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         @if($transaction->transfer_group_id)
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-info-100 text-primary-700">
                                             Transfer
                                         </span>
                                         @elseif($transaction->type === 'income')
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Income</span>
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-success-100 text-success-700">Income</span>
                                         @else
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Expense</span>
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-danger-100 text-danger-700">Expense</span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">

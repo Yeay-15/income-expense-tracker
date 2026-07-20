@@ -10,7 +10,14 @@ class CategoryManagementController extends Controller
 {
     public function index()
     {
-        $categories = Category::whereNull('user_id')->orderBy('type')->orderBy('name')->get();
+        // Perubahan: Dikelompokkan berdasarkan tipe (agar view tidak error),
+        // lalu "Lainnya" ditaruh paling bawah, sisanya sesuai abjad
+        $categories = Category::whereNull('user_id')
+            ->orderBy('type')
+            ->orderByRaw("CASE WHEN name = 'Lainnya' THEN 1 ELSE 0 END")
+            ->orderBy('name', 'asc')
+            ->get();
+
         return view('admin.categories.index', compact('categories'));
     }
 

@@ -10,7 +10,13 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::availableFor(Auth::id())->orderBy('type')->orderBy('name')->get();
+        // Terapkan trik yang sama persis dengan yang ada di Admin Area
+        $categories = Category::availableFor(Auth::id())
+            ->orderBy('type')
+            ->orderByRaw("CASE WHEN name = 'Lainnya' THEN 1 ELSE 0 END")
+            ->orderBy('name', 'asc')
+            ->get();
+
         return view('categories.index', compact('categories'));
     }
 

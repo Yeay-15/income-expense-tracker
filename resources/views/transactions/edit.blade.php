@@ -30,7 +30,19 @@
                             @enderror
                         </div>
 
-                        <!-- Category -->
+                        <!-- Transaction Type (Dipindah ke atas) -->
+                        <div class="mb-4">
+                            <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+                            <select name="type" id="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                                <option value="income" {{ (old('type', $transaction->type) == 'income') ? 'selected' : '' }}>Income</option>
+                                <option value="expense" {{ (old('type', $transaction->type) == 'expense') ? 'selected' : '' }}>Expense</option>
+                            </select>
+                            @error('type')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Category (Otomatis terfilter berdasarkan Type) -->
                         <div class="mb-4">
                             <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
                             <select name="category_id" id="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" required>
@@ -39,7 +51,7 @@
                                 <option value="{{ $category->id }}"
                                     data-type="{{ $category->type }}"
                                     {{ old('category_id', $transaction->category_id) == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }} ({{ ucfirst($category->type) }})
+                                    {{ $category->name }}
                                 </option>
                                 @endforeach
                             </select>
@@ -60,18 +72,6 @@
                             <label for="receipt" class="block text-sm font-medium text-gray-700">Receipt (optional - upload new to replace)</label>
                             <input type="file" name="receipt" id="receipt" accept="image/*" class="mt-1 block w-full text-sm">
                             @error('receipt')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Transaction Type -->
-                        <div class="mb-4">
-                            <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
-                            <select name="type" id="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
-                                <option value="income" {{ (old('type', $transaction->type) == 'income') ? 'selected' : '' }}>Income</option>
-                                <option value="expense" {{ (old('type', $transaction->type) == 'expense') ? 'selected' : '' }}>Expense</option>
-                            </select>
-                            @error('type')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
@@ -111,6 +111,42 @@
                             </button>
                         </div>
                     </form>
+
+                    <!-- Script Filter Dependent Dropdown -->
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const typeSelect = document.getElementById('type');
+                            const categorySelect = document.getElementById('category_id');
+                            const allCategoryOptions = Array.from(categorySelect.options).filter(opt => opt.value !== "");
+
+                            function updateCategoryOptions() {
+                                const selectedType = typeSelect.value;
+                                let hasValidSelection = false;
+
+                                allCategoryOptions.forEach(option => {
+                                    if (selectedType === "" || option.getAttribute('data-type') === selectedType) {
+                                        option.style.display = ''; // Tampilkan
+                                        option.disabled = false; // Aktifkan
+                                        if (option.selected) hasValidSelection = true;
+                                    } else {
+                                        option.style.display = 'none'; // Sembunyikan
+                                        option.disabled = true; // Nonaktifkan
+                                    }
+                                });
+
+                                // Jika kategori yang sedang terpilih tidak cocok dengan tipe baru, reset ke placeholder
+                                if (!hasValidSelection && categorySelect.value !== "") {
+                                    categorySelect.value = "";
+                                }
+                            }
+
+                            // Jalankan saat tipe diubah
+                            typeSelect.addEventListener('change', updateCategoryOptions);
+
+                            // Jalankan sekali saat halaman dimuat (Penting untuk Edit karena tipe sudah terpilih)
+                            updateCategoryOptions();
+                        });
+                    </script>
 
                 </div>
             </div>

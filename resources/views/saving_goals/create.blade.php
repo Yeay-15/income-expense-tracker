@@ -28,7 +28,7 @@
                     </div>
 
                     <div class="flex justify-end space-x-3">
-                        <x-secondary-button type="button" onclick="window.location.href='{{ route(\'saving-goals.index\') }}'">Batal</x-secondary-button>
+                        <x-secondary-button type="button" onclick="window.location.href='{{ route('saving-goals.index') }}'">Batal</x-secondary-button>
                         <x-primary-button>Simpan</x-primary-button>
                     </div>
                 </form>

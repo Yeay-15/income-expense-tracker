@@ -60,7 +60,7 @@
                     </div>
 
                     <div class="flex justify-end space-x-3">
-                        <x-secondary-button type="button" onclick="window.location.href='{{ route(\'transactions.index\') }}'">Batal</x-secondary-button>
+                        <x-secondary-button type="button" onclick="window.location.href='{{ route('transactions.index') }}'">Batal</x-secondary-button>
                         <x-primary-button>Transfer</x-primary-button>
                     </div>
                 </form>
