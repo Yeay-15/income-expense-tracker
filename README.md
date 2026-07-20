@@ -2,7 +2,7 @@
 
 Aplikasi pencatatan keuangan (income & expense tracker) berbasis web yang dibangun menggunakan **Laravel 13**. Aplikasi ini tidak hanya mencatat transaksi sederhana, tetapi sudah dikembangkan menjadi sistem pembukuan personal yang komprehensif — mencakup manajemen multi-akun (dompet), kategori transaksi, transfer antar akun, budgeting bulanan, target tabungan (saving goals), transaksi berulang, hingga panel admin untuk mengelola pengguna dan data master sistem.
 
-## Identitas Pengembang
+## Identitas Mahasiswa
 
 | | |
 |---|---|
@@ -188,7 +188,7 @@ Antarmuka aplikasi dibangun responsif menggunakan Tailwind CSS, menyesuaikan tat
 
 ## Laporan Pendukung
 
-Anda dapat mengunduh sampel laporan PDF hasil export aplikasi melalui tautan berikut:
+Laporan PDF hasil export aplikasi melalui tautan berikut:
 - [Unduh Laporan Keuangan PDF](docs/Laporan-Keuangan-7-2026.pdf)
 
 ## Struktur Basis Data Singkat
@@ -206,4 +206,4 @@ Ringkasan tabel utama pada aplikasi ini:
 
 ## Lisensi
 
-Proyek ini dibuat untuk keperluan Tugas Akhir (UAS) mata kuliah Pemrograman Web lanjut, Teknik informatika, Universitas Malikussaleh
+Proyek ini dibuat untuk keperluan Tugas Akhir (UAS) mata kuliah Pemrograman Web lanjut (A7), Teknik Informatika, Universitas Malikussaleh
