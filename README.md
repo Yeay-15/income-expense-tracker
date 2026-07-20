@@ -70,8 +70,8 @@ Ikuti langkah berikut untuk menjalankan aplikasi ini di lokal setelah clone dari
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/<username>/<nama-repo>.git
-cd <nama-repo>
+git clone https://github.com/Yeay-15/income-expense-tracker.git
+cd income-expense-tracker
 
 # 2. Install dependency PHP
 composer install
