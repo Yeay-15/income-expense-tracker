@@ -1,44 +1,44 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Alokasikan Dana: ') }}{{ $savingGoal->name }}
+            {{ __('Edit Target Tabungan') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm rounded-lg p-6">
-                <form method="POST" action="{{ route('saving-goals.allocate', $savingGoal->id) }}">
-                    @csrf
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <form method="POST" action="{{ route('saving-goals.update', $savingGoal->id) }}">
+                        @csrf
+                        @method('PUT')
 
-                    <div class="mb-4">
-                        <x-input-label for="account_id" value="Ambil Dana dari Akun" />
-                        <select id="account_id" name="account_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                            @foreach($accounts as $account)
-                            <option value="{{ $account->id }}" {{ old('account_id') == $account->id ? 'selected' : '' }}>
-                                {{ $account->name }} (Rp {{ number_format($account->balance, 0, ',', '.') }})
-                            </option>
-                            @endforeach
-                        </select>
-                        <x-input-error :messages="$errors->get('account_id')" class="mt-2" />
-                    </div>
+                        <div class="mb-4">
+                            <x-input-label for="name" value="Nama Target Tabungan" />
+                            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name', $savingGoal->name)" required autofocus />
+                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                        </div>
 
-                    <div class="mb-4">
-                        <x-input-label for="amount" value="Jumlah Dana (Rp)" />
-                        <x-text-input id="amount" name="amount" type="number" step="0.01" class="mt-1 block w-full" :value="old('amount')" required />
-                        <x-input-error :messages="$errors->get('amount')" class="mt-2" />
-                    </div>
+                        <div class="mb-4">
+                            <x-input-label for="target_amount" value="Target Jumlah (Rp)" />
+                            <x-text-input id="target_amount" class="block mt-1 w-full" type="number" step="0.01" name="target_amount" :value="old('target_amount', $savingGoal->target_amount)" required />
+                            <x-input-error :messages="$errors->get('target_amount')" class="mt-2" />
+                        </div>
 
-                    <div class="mb-6">
-                        <x-input-label for="date" value="Tanggal" />
-                        <x-text-input id="date" name="date" type="date" class="mt-1 block w-full" :value="old('date', date('Y-m-d'))" required />
-                    </div>
+                        <div class="mb-4">
+                            <x-input-label for="target_date" value="Target Tanggal Tercapai (Opsional)" />
+                            <x-text-input id="target_date" class="block mt-1 w-full" type="date" name="target_date" :value="old('target_date', $savingGoal->target_date ? \Carbon\Carbon::parse($savingGoal->target_date)->format('Y-m-d') : '')" />
+                            <x-input-error :messages="$errors->get('target_date')" class="mt-2" />
+                        </div>
 
-                    <div class="flex justify-end space-x-3">
-                        <x-secondary-button type="button" onclick="window.location.href='{{ route('saving-goals.index') }}'">Batal</x-secondary-button>
-                        <x-primary-button>Alokasikan</x-primary-button>
-                    </div>
-                </form>
+                        <div class="flex items-center justify-end mt-6">
+                            <a href="{{ route('saving-goals.index') }}" class="text-gray-600 hover:text-gray-900 mr-4">Batal</a>
+                            <x-primary-button>
+                                {{ __('Simpan Perubahan') }}
+                            </x-primary-button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

@@ -26,7 +26,7 @@
             </div>
 
             <!-- Summary Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <!-- Total Income Card -->
                 <div class="bg-white overflow-hidden shadow-sm rounded-lg border-l-4 border-success-600">
                     <div class="p-6">
@@ -43,6 +43,16 @@
                         <div class="text-sm font-medium text-slate-500 uppercase tracking-wider">Total Expense</div>
                         <div class="mt-2 text-3xl font-bold text-danger-600">
                             Rp {{ number_format($totalExpense, 0, ',', '.') }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Savings Card -->
+                <div class="bg-white overflow-hidden shadow-sm rounded-lg border-l-4 border-indigo-500">
+                    <div class="p-6">
+                        <div class="text-sm font-medium text-slate-500 uppercase tracking-wider">Total Tabungan</div>
+                        <div class="mt-2 text-3xl font-bold text-indigo-600">
+                            Rp {{ number_format($totalSavings, 0, ',', '.') }}
                         </div>
                     </div>
                 </div>

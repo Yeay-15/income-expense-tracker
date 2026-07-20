@@ -51,9 +51,16 @@
                         <p class="text-xs text-gray-500 mt-1">{{ $goal->percentage }}% tercapai</p>
                     </div>
 
-                    <a href="{{ route('saving-goals.allocate.form', $goal->id) }}" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded">
-                        + Alokasikan Dana
-                    </a>
+                    <!-- Area Tombol Aksi Tabungan -->
+                    <div class="mt-5 flex flex-wrap gap-2">
+                        <a href="{{ route('saving-goals.allocate.form', $goal->id) }}" class="inline-block bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-4 rounded transition duration-150 ease-in-out">
+                            + Alokasikan Dana
+                        </a>
+
+                        <a href="{{ route('saving-goals.withdraw.form', $goal->id) }}" class="inline-block bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium py-2 px-4 rounded transition duration-150 ease-in-out">
+                            - Tarik Dana
+                        </a>
+                    </div>
                 </div>
                 @empty
                 <p class="text-gray-500 col-span-2">Belum ada target tabungan.</p>

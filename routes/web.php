@@ -49,6 +49,9 @@ Route::middleware(['auth', 'verified', 'not_banned'])->group(function () {
 
     Route::get('/saving-goals/{savingGoal}/allocate', [SavingGoalController::class, 'allocateForm'])->name('saving-goals.allocate.form');
     Route::post('/saving-goals/{savingGoal}/allocate', [SavingGoalController::class, 'allocate'])->name('saving-goals.allocate');
+
+    Route::get('/saving-goals/{savingGoal}/withdraw', [SavingGoalController::class, 'withdrawForm'])->name('saving-goals.withdraw.form');
+    Route::post('/saving-goals/{savingGoal}/withdraw', [SavingGoalController::class, 'withdraw'])->name('saving-goals.withdraw');
 });
 
 Route::middleware(['auth', 'verified', AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {

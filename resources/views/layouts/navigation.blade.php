@@ -32,6 +32,10 @@
                     <x-nav-link :href="route('budgets.index')" :active="request()->routeIs('budgets.*')">
                         {{ __('Budgets') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('saving-goals.index')" :active="request()->routeIs('saving-goals.*')">
+                        {{ __('Savings') }}
+                    </x-nav-link>
                     <!-- Akhir Tambahan Menu Desktop -->
 
                     <!-- Admin Area Dropdown (Visible only to Admin) -->
@@ -169,6 +173,10 @@
 
             <x-responsive-nav-link :href="route('budgets.index')" :active="request()->routeIs('budgets.*')">
                 {{ __('Budgets') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('saving-goals.index')" :active="request()->routeIs('saving-goals.*')">
+                {{ __('Savings') }}
             </x-responsive-nav-link>
 
             <!-- Menu Admin Area untuk Mobile (Hanya untuk Admin) -->

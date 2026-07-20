@@ -125,6 +125,11 @@ class DashboardController extends Controller
             })
             ->filter(fn($b) => $b->percentage >= 80);
 
-        return compact('totalIncome', 'totalExpense', 'balance', 'netWorth', 'budgetAlerts', 'month', 'year');
+        // Hitung total semua tabungan yang dimiliki user
+        $totalSavings = \App\Models\SavingGoal::where('user_id', \Illuminate\Support\Facades\Auth::id())
+            ->get()
+            ->sum('saved_amount');
+
+        return compact('totalIncome', 'totalExpense', 'balance', 'netWorth', 'budgetAlerts', 'totalSavings', 'month', 'year');
     }
 }

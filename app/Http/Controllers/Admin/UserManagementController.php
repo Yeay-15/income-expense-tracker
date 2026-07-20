@@ -21,18 +21,28 @@ class UserManagementController extends Controller
     {
         $this->guardSelf($user);
 
-        $user->update(['role' => $user->role === 'admin' ? 'user' : 'admin']);
+        // Tentukan role baru secara eksplisit sebelum disimpan
+        $newRole = $user->role === 'admin' ? 'user' : 'admin';
 
-        return back()->with('success', "Role {$user->name} berhasil diubah menjadi {$user->role}.");
+        $user->update([
+            'role' => $newRole
+        ]);
+
+        return back()->with('success', "Role {$user->name} berhasil diubah menjadi " . ucfirst($newRole) . ".");
     }
 
     public function toggleBan(User $user)
     {
         $this->guardSelf($user);
 
-        $user->update(['is_banned' => ! $user->is_banned]);
+        // Balikkan status banned secara eksplisit
+        $newBanStatus = !$user->is_banned;
 
-        return back()->with('success', $user->is_banned
+        $user->update([
+            'is_banned' => $newBanStatus
+        ]);
+
+        return back()->with('success', $newBanStatus
             ? "{$user->name} berhasil di-suspend."
             : "{$user->name} berhasil diaktifkan kembali.");
     }

@@ -18,8 +18,12 @@ class SavingGoal extends Model
         return $this->hasMany(Transaction::class);
     }
 
+    // Perbaikan: Pisahkan perhitungan berdasarkan tipe transaksi
     public function getSavedAmountAttribute(): float
     {
-        return $this->transactions()->sum('amount');
+        $allocated = $this->transactions()->where('type', 'expense')->sum('amount');
+        $withdrawn = $this->transactions()->where('type', 'income')->sum('amount');
+
+        return (float) ($allocated - $withdrawn);
     }
 }
