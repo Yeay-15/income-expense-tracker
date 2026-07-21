@@ -158,10 +158,11 @@ Untuk produksi, daftarkan cron job berikut di server:
 ![Accounts](docs/accounts.png)
 ![Categories](docs/categories.png)
 
-### 4. Transaksi, Budget & Target Tabungan
+### 4. Transaksi, Budget, Target Tabungan & Transaksi Berulang (Recurring)
 ![Transactions](docs/transactions.png)
 ![Budgets](docs/budgets.png)
 ![Savings](docs/savings.png)
+![Recurring](docs/recurring.png)
 
 ### 5. Panel Admin & Pemisahan Hak Akses
 

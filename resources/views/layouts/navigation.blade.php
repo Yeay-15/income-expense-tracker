@@ -36,6 +36,10 @@
                     <x-nav-link :href="route('saving-goals.index')" :active="request()->routeIs('saving-goals.*')">
                         {{ __('Savings') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('recurring.index')" :active="request()->routeIs('recurring.*')">
+                        {{ __('Rutin') }}
+                    </x-nav-link>
                     <!-- Akhir Tambahan Menu Desktop -->
 
                     <!-- Admin Area Dropdown (Visible only to Admin) -->
@@ -178,6 +182,11 @@
             <x-responsive-nav-link :href="route('saving-goals.index')" :active="request()->routeIs('saving-goals.*')">
                 {{ __('Savings') }}
             </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('recurring.index')" :active="request()->routeIs('recurring.*')">
+                {{ __('Transaksi Berulang') }}
+            </x-responsive-nav-link>
+
 
             <!-- Menu Admin Area untuk Mobile (Hanya untuk Admin) -->
             @if(Auth::user()->role === 'admin')

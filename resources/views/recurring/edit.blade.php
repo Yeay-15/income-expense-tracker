@@ -1,23 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Jadwalkan Transaksi Berulang') }}</h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Edit Transaksi Berulang') }}</h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-sm rounded-lg p-6">
 
-                <form method="POST" action="{{ route('recurring.store') }}"
+                <form method="POST" action="{{ route('recurring.update', $recurring->id) }}"
                     x-data="{
-                        type: '{{ old('type', 'expense') }}',
-                        frequency: '{{ old('frequency', 'monthly') }}',
+                        type: '{{ old('type', $recurring->type) }}',
+                        frequency: '{{ old('frequency', $recurring->frequency) }}',
                         categories: {{ $categories->toJson() }},
-                        selectedCategory: '{{ old('category_id') }}',
+                        selectedCategory: '{{ old('category_id', $recurring->category_id) }}',
                         get filteredCategories() {
                             return this.categories
                                 .filter(category => category.type === this.type)
                                 .sort((a, b) => {
-                                    // Pindahkan kategori yang mengandung kata 'lainnya' ke paling bawah
                                     let aLainnya = a.name.toLowerCase().includes('lainnya') ? 1 : 0;
                                     let bLainnya = b.name.toLowerCase().includes('lainnya') ? 1 : 0;
                                     return aLainnya - bLainnya;
@@ -35,13 +34,22 @@
                         });
                     ">
                     @csrf
+                    @method('PUT')
+
+                    <div class="mb-4">
+                        <x-input-label for="is_active" value="Status Jadwal" />
+                        <select id="is_active" name="is_active" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="1" {{ old('is_active', $recurring->is_active) ? 'selected' : '' }}>Aktif (Berjalan Otomatis)</option>
+                            <option value="0" {{ !old('is_active', $recurring->is_active) ? 'selected' : '' }}>Nonaktif (Jeda Sementara)</option>
+                        </select>
+                        <x-input-error :messages="$errors->get('is_active')" class="mt-2" />
+                    </div>
 
                     <div class="mb-4">
                         <x-input-label for="account_id" value="Akun" />
                         <select id="account_id" name="account_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                            <option value="" disabled {{ old('account_id') ? '' : 'selected' }}>-- Pilih Akun --</option>
                             @foreach($accounts as $account)
-                            <option value="{{ $account->id }}" {{ old('account_id') == $account->id ? 'selected' : '' }}>
+                            <option value="{{ $account->id }}" {{ old('account_id', $recurring->account_id) == $account->id ? 'selected' : '' }}>
                                 {{ $account->name }}
                             </option>
                             @endforeach
@@ -71,13 +79,13 @@
 
                     <div class="mb-4">
                         <x-input-label for="amount" value="Jumlah (Rp)" />
-                        <x-text-input id="amount" name="amount" type="number" step="0.01" class="mt-1 block w-full" :value="old('amount')" required />
+                        <x-text-input id="amount" name="amount" type="number" step="0.01" class="mt-1 block w-full" :value="old('amount', $recurring->amount)" required />
                         <x-input-error :messages="$errors->get('amount')" class="mt-2" />
                     </div>
 
                     <div class="mb-4">
                         <x-input-label for="description" value="Deskripsi (misal: Langganan Spotify)" />
-                        <x-text-input id="description" name="description" type="text" class="mt-1 block w-full" :value="old('description')" required />
+                        <x-text-input id="description" name="description" type="text" class="mt-1 block w-full" :value="old('description', $recurring->description)" required />
                         <x-input-error :messages="$errors->get('description')" class="mt-2" />
                     </div>
 
@@ -92,22 +100,16 @@
                         <x-input-error :messages="$errors->get('frequency')" class="mt-2" />
                     </div>
 
-                    <div class="mb-4" x-show="frequency === 'monthly'">
+                    <div class="mb-6" x-show="frequency === 'monthly'">
                         <x-input-label for="day_of_month" value="Tanggal Setiap Bulan" />
-                        <x-text-input id="day_of_month" name="day_of_month" type="number" min="1" max="31" class="mt-1 block w-full" :value="old('day_of_month')" />
-                        <p class="text-xs text-gray-500 mt-1">Kosongkan jika ingin mengikuti tanggal mulai.</p>
+                        <x-text-input id="day_of_month" name="day_of_month" type="number" min="1" max="31" class="mt-1 block w-full" :value="old('day_of_month', $recurring->day_of_month)" />
+                        <p class="text-xs text-gray-500 mt-1">Kosongkan jika ingin dieksekusi menyesuaikan dengan tanggal terakhir berjalan.</p>
                         <x-input-error :messages="$errors->get('day_of_month')" class="mt-2" />
-                    </div>
-
-                    <div class="mb-6">
-                        <x-input-label for="start_date" value="Mulai Tanggal" />
-                        <x-text-input id="start_date" name="start_date" type="date" class="mt-1 block w-full" :value="old('start_date', date('Y-m-d'))" required />
-                        <x-input-error :messages="$errors->get('start_date')" class="mt-2" />
                     </div>
 
                     <div class="flex justify-end space-x-3">
                         <x-secondary-button type="button" onclick="window.location.href='{{ route('recurring.index') }}'">Batal</x-secondary-button>
-                        <x-primary-button>Simpan Jadwal</x-primary-button>
+                        <x-primary-button>Perbarui Jadwal</x-primary-button>
                     </div>
                 </form>
             </div>
